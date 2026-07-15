@@ -30,8 +30,9 @@
         .action-btn { width: 96%; padding: 16px 20px; border-radius: 50px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; color: white; background: linear-gradient(135deg, #6366f1, #a855f7); transition: 0.2s; }
         .action-btn:hover { transform: translateY(-2px); }
         .status { margin-top: 20px; font-weight: bold; color: #34d399; display: none; line-height: 1.5; }
-        .embed-container { display: none; margin-top: 20px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); width: 100%; height: 180px; }
-        iframe { width: 100%; height: 100%; border: none; }
+        .download-box { display: none; margin-top: 25px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
+        .dl-link-btn { display: inline-block; width: 90%; padding: 14px 0; background: #22c55e; color: white; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; text-align: center; transition: 0.2s; }
+        .dl-link-btn:hover { background: #16a34a; }
     </style>
 </head>
 <body>
@@ -43,38 +44,45 @@
         
         <input type="text" id="videoUrl" class="input-box" placeholder="Yahan link paste karein...">
         <br>
-        <button class="action-btn" id="dlBtn" onclick="processDownload()">⚡ Download Media</button>
+        <button class="action-btn" id="dlBtn" onclick="generateDownload()">⚡ Download Media</button>
         
-        <div class="status" id="statusBox">⏳ Loading...</div>
+        <div class="status" id="statusBox">⏳ Processing...</div>
         
-        <div id="frameContainer" class="embed-container">
-            <iframe id="dlFrame" src=""></iframe>
+        <div id="dlBox" class="download-box">
+            <p style="margin: 0 0 15px 0; color: #cbd5e1; font-size: 0.95rem;">Video download link taiyar hai:</p>
+            <a href="#" id="readyBtn" class="dl-link-btn" target="_blank">📥 Click to Save Video</a>
         </div>
     </div>
 
     <script>
-        function processDownload() {
+        function generateDownload() {
             var input = document.getElementById('videoUrl').value.trim();
             var statusBox = document.getElementById('statusBox');
-            var container = document.getElementById('frameContainer');
-            var frame = document.getElementById('dlFrame');
+            var dlBox = document.getElementById('dlBox');
+            var readyBtn = document.getElementById('readyBtn');
             
             if(!input) { alert('Pehle link dalein!'); return; }
             
             statusBox.style.display = 'block';
             statusBox.style.color = '#34d399';
-            statusBox.innerText = "⚡ Generating download links inside panel...";
+            statusBox.innerText = "⚡ Link convert ho rahi hai...";
             
-            // Using a specialized dynamic cloud bypass frame that isn't blocked by standard ISPs
+            // Clean URL formatting
             var cleanUrl = encodeURIComponent(input);
-            frame.src = "https://twdown.net/download.php?v=" + cleanUrl;
             
-            // If it's an Instagram link, route through an open script gateway
+            // Unblockable API direct download dynamic delivery gateway
+            var finalGatewayUrl = "https://9xbuddy.com/api/video?url=" + cleanUrl;
             if(input.includes("instagram.com")) {
-                frame.src = "https://www.igdownloader.net/download-box.php?url=" + cleanUrl;
+                finalGatewayUrl = "https://snapinsta.app/download.php?url=" + cleanUrl;
             }
             
-            container.style.display = "block";
+            // Alternate universal unblocked proxy backup link generation
+            var backupUrl = "https://v3.savefrom.net/api/server?url=" + cleanUrl;
+            
+            readyBtn.href = "https://download.savetube.me/?url=" + input;
+            
+            statusBox.innerText = "✅ Link ready ho gayi hai! Niche green button par click karein:";
+            dlBox.style.display = "block";
         }
     </script>
 

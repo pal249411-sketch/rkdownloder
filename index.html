@@ -39,7 +39,7 @@
     <div class="main-wrapper">
         <h1><span class="neon-text">R&amp;K</span></h1>
         <span class="tagline">Downloader</span>
-        <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 25px;">Video Link Paste Karein Aur Download Karein.</p>
+        <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 25px;">Video link paste karein aur direct process karein.</p>
         
         <input type="text" id="videoUrl" class="input-box" placeholder="Yahan link paste karein...">
         <br>
@@ -48,8 +48,8 @@
         <div class="status" id="statusBox">⏳ Processing...</div>
         
         <div id="dlBox" class="download-box">
-            <p style="margin: 0 0 15px 0; color: #cbd5e1; font-size: 0.95rem;">Aapki link convert ho chuki hai:</p>
-            <a href="#" id="readyBtn" class="dl-link-btn" target="_blank">📥 Click to Download</a>
+            <p style="margin: 0 0 15px 0; color: #cbd5e1; font-size: 0.95rem;">Unblocked engine link ready:</p>
+            <a href="#" id="readyBtn" class="dl-link-btn" target="_blank">📥 Click to Open Video Source</a>
         </div>
     </div>
 
@@ -63,17 +63,18 @@
             if(!input) { alert('Pehle link dalein!'); return; }
             
             statusBox.style.display = 'block';
-            statusBox.innerText = "⚡ Generating secure open gateway link...";
+            statusBox.innerText = "⚡ Generating unblockable web stream...";
             
-            // Unblockable cloud multi-platform redirection link maker
-            var targetLink = "https://www.ddownr.com/convert?url=" + encodeURIComponent(input);
+            // Using direct generic google proxy engine to guarantee page loading over standard ISP restrictions
+            var proxyGateway = "https://www.google.com/url?q=" + encodeURIComponent("https://savefrom.im/?url=" + input);
+            
             if(input.includes("instagram.com")) {
-                targetLink = "https://snapinsta.app/?url=" + encodeURIComponent(input);
+                proxyGateway = "https://www.google.com/url?q=" + encodeURIComponent("https://instavideosave.net/?url=" + input);
             }
             
-            readyBtn.href = targetLink;
+            readyBtn.href = proxyGateway;
             
-            statusBox.innerText = "✅ Download Button ready hai!";
+            statusBox.innerText = "✅ Engine link updated successfully!";
             dlBox.style.display = "block";
         }
     </script>

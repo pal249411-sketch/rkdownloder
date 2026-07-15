@@ -29,10 +29,9 @@
         .input-box { width: 88%; padding: 15px 20px; border-radius: 50px; border: 2px solid #475569; background: rgba(0,0,0,0.3); color: #fff; font-size: 1rem; text-align: center; outline: none; margin-bottom: 20px; }
         .action-btn { width: 96%; padding: 16px 20px; border-radius: 50px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; color: white; background: linear-gradient(135deg, #6366f1, #a855f7); transition: 0.2s; }
         .action-btn:hover { transform: translateY(-2px); }
-        .status { margin-top: 20px; font-weight: bold; color: #34d399; display: none; line-height: 1.5; }
+        .status { margin-top: 20px; font-weight: bold; color: #34d399; display: none; }
         .download-box { display: none; margin-top: 25px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); }
-        .dl-link-btn { display: inline-block; width: 90%; padding: 14px 0; background: #22c55e; color: white; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; text-align: center; transition: 0.2s; }
-        .dl-link-btn:hover { background: #16a34a; }
+        .dl-link-btn { display: inline-block; width: 90%; padding: 14px 0; background: #22c55e; color: white; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; text-align: center; }
     </style>
 </head>
 <body>
@@ -40,7 +39,7 @@
     <div class="main-wrapper">
         <h1><span class="neon-text">R&amp;K</span></h1>
         <span class="tagline">Downloader</span>
-        <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 25px;">Isi page par instant download karein.</p>
+        <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 25px;">Video Link Paste Karein Aur Download Karein.</p>
         
         <input type="text" id="videoUrl" class="input-box" placeholder="Yahan link paste karein...">
         <br>
@@ -49,8 +48,8 @@
         <div class="status" id="statusBox">⏳ Processing...</div>
         
         <div id="dlBox" class="download-box">
-            <p style="margin: 0 0 15px 0; color: #cbd5e1; font-size: 0.95rem;">Video download link taiyar hai:</p>
-            <a href="#" id="readyBtn" class="dl-link-btn" target="_blank">📥 Click to Save Video</a>
+            <p style="margin: 0 0 15px 0; color: #cbd5e1; font-size: 0.95rem;">Aapki link convert ho chuki hai:</p>
+            <a href="#" id="readyBtn" class="dl-link-btn" target="_blank">📥 Click to Download</a>
         </div>
     </div>
 
@@ -64,24 +63,17 @@
             if(!input) { alert('Pehle link dalein!'); return; }
             
             statusBox.style.display = 'block';
-            statusBox.style.color = '#34d399';
-            statusBox.innerText = "⚡ Link convert ho rahi hai...";
+            statusBox.innerText = "⚡ Generating secure open gateway link...";
             
-            // Clean URL formatting
-            var cleanUrl = encodeURIComponent(input);
-            
-            // Unblockable API direct download dynamic delivery gateway
-            var finalGatewayUrl = "https://9xbuddy.com/api/video?url=" + cleanUrl;
+            // Unblockable cloud multi-platform redirection link maker
+            var targetLink = "https://www.ddownr.com/convert?url=" + encodeURIComponent(input);
             if(input.includes("instagram.com")) {
-                finalGatewayUrl = "https://snapinsta.app/download.php?url=" + cleanUrl;
+                targetLink = "https://snapinsta.app/?url=" + encodeURIComponent(input);
             }
             
-            // Alternate universal unblocked proxy backup link generation
-            var backupUrl = "https://v3.savefrom.net/api/server?url=" + cleanUrl;
+            readyBtn.href = targetLink;
             
-            readyBtn.href = "https://download.savetube.me/?url=" + input;
-            
-            statusBox.innerText = "✅ Link ready ho gayi hai! Niche green button par click karein:";
+            statusBox.innerText = "✅ Download Button ready hai!";
             dlBox.style.display = "block";
         }
     </script>

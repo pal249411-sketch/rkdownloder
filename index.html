@@ -29,12 +29,7 @@
         .input-box { width: 88%; padding: 15px 20px; border-radius: 50px; border: 2px solid #475569; background: rgba(0,0,0,0.3); color: #fff; font-size: 1rem; text-align: center; outline: none; margin-bottom: 20px; }
         .action-btn { width: 96%; padding: 16px 20px; border-radius: 50px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; color: white; background: linear-gradient(135deg, #6366f1, #a855f7); transition: 0.2s; }
         .action-btn:hover { transform: translateY(-2px); }
-        .result-area { display: none; margin-top: 25px; padding: 15px; background: rgba(0,0,0,0.4); border-radius: 15px; border: 1px dashed #6366f1; }
-        .dl-link { display: block; padding: 14px; margin: 10px auto; width: 85%; border-radius: 30px; text-decoration: none; color: white; font-weight: bold; transition: 0.2s; }
-        .dl-video { background: #ef4444; }
-        .dl-audio { background: #06b6d4; }
-        .dl-link:hover { opacity: 0.9; transform: scale(1.02); }
-        .status { color: #34d399; font-weight: bold; margin-bottom: 10px; }
+        .status { margin-top: 20px; font-weight: bold; color: #34d399; display: none; }
     </style>
 </head>
 <body>
@@ -42,36 +37,64 @@
     <div class="main-wrapper">
         <h1><span class="neon-text">R&amp;K</span></h1>
         <span class="tagline">Downloader</span>
-        <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 25px;">Bina redirection error ke high-speed premium server se download karein.</p>
+        <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 25px;">Link daalein aur isi page par direct download karein.</p>
         
         <input type="text" id="videoUrl" class="input-box" placeholder="Yahan link paste karein...">
         <br>
-        <button class="action-btn" onclick="fetchStream()">⚡ Direct Fetch Media</button>
+        <button class="action-btn" id="dlBtn" onclick="startDirectDownload()">⚡ Download Media</button>
         
-        <div class="result-area" id="resultBox">
-            <div class="status">✅ Source Link Generated!</div>
-            <a href="#" id="videoBtn" class="dl-link dl-video" target="_blank">🎥 Save Video (MP4)</a>
-            <a href="#" id="audioBtn" class="dl-link dl-audio" target="_blank">🎵 Save Audio (MP3)</a>
-        </div>
+        <div class="status" id="statusBox">⏳ Downloading started inside browser... Please wait.</div>
     </div>
 
     <script>
-        function fetchStream() {
+        async function startDirectDownload() {
             var input = document.getElementById('videoUrl').value.trim();
-            var resultBox = document.getElementById('resultBox');
-            var videoBtn = document.getElementById('videoBtn');
-            var audioBtn = document.getElementById('audioBtn');
+            var statusBox = document.getElementById('statusBox');
+            var btn = document.getElementById('dlBtn');
             
             if(!input) { alert('Pehle link dalein!'); return; }
             
-            // Unblocked permanent global developer proxy CDN
-            var encodedUrl = encodeURIComponent(input);
-            
-            // Advanced direct gateway links that bypass ISP block levels
-            videoBtn.href = "https://co.wuk.sh/api/backup?url=" + encodedUrl + "&type=video";
-            audioBtn.href = "https://co.wuk.sh/api/backup?url=" + encodedUrl + "&type=audio";
-            
-            resultBox.style.display = 'block';
+            statusBox.style.display = 'block';
+            statusBox.style.color = '#e2e8f0';
+            statusBox.innerText = "⏳ Fetching from server... (Isi page par download ho raha hai)";
+            btn.disabled = true;
+
+            try {
+                // Direct background API request to convert link
+                let response = await fetch("https://api.cobalt.tools/api/json", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                    body: JSON.stringify({ url: input, filenamePattern: "basic" })
+                });
+                
+                let data = await response.json();
+                
+                if(data.url) {
+                    statusBox.innerText = "⏳ File mil gayi! Browser mein download shuru ho rahi hai...";
+                    
+                    // Directly fetching the file as a blob to download silently inside the same tab
+                    let fileResp = await fetch(data.url);
+                    let fileBlob = await fileResp.blob();
+                    let blobUrl = URL.createObjectURL(fileBlob);
+                    
+                    let a = document.createElement('a');
+                    a.href = blobUrl;
+                    a.download = "RK_Downloaded_Media.mp4";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    
+                    statusBox.style.color = '#34d399';
+                    statusBox.innerText = "✅ Download Complete!";
+                } else {
+                    statusBox.style.color = '#f87171';
+                    statusBox.innerText = "❌ Error: Link verify nahi ho paayi.";
+                }
+            } catch (err) {
+                statusBox.style.color = '#f87171';
+                statusBox.innerText = "❌ Network connection issue. Kripya thodi der baad prayas karein.";
+            }
+            btn.disabled = false;
         }
     </script>
 

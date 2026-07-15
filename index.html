@@ -30,7 +30,8 @@
         .action-btn { width: 96%; padding: 16px 20px; border-radius: 50px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; color: white; background: linear-gradient(135deg, #6366f1, #a855f7); transition: 0.2s; }
         .action-btn:hover { transform: translateY(-2px); }
         .status { margin-top: 20px; font-weight: bold; color: #34d399; display: none; line-height: 1.5; }
-        .backup-btn { display: inline-block; margin-top: 10px; padding: 10px 20px; background: #ef4444; color: white; border-radius: 20px; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .video-preview { width: 100%; max-height: 250px; margin-top: 15px; border-radius: 12px; display: none; border: 1px solid rgba(255,255,255,0.2); }
+        .save-btn { display: none; width: 96%; padding: 14px 20px; margin-top: 15px; background: #22c55e; color: white; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; text-align: center; }
     </style>
 </head>
 <body>
@@ -38,60 +39,60 @@
     <div class="main-wrapper">
         <h1><span class="neon-text">R&amp;K</span></h1>
         <span class="tagline">Downloader</span>
-        <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 25px;">Bina redirection ke isi page par download karein.</p>
+        <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 25px;">Isi page par instant download karein.</p>
         
         <input type="text" id="videoUrl" class="input-box" placeholder="Yahan link paste karein...">
         <br>
-        <button class="action-btn" id="dlBtn" onclick="startDirectDownload()">⚡ Download Media</button>
+        <button class="action-btn" id="dlBtn" onclick="processDownload()">⚡ Download Media</button>
         
         <div class="status" id="statusBox">⏳ Loading...</div>
+        <video id="player" class="video-preview" controls></video>
+        <a href="#" id="finalSave" class="save-btn" download="RK_Media.mp4">📥 Save to Device</a>
     </div>
 
     <script>
-        async function startDirectDownload() {
+        async function processDownload() {
             var input = document.getElementById('videoUrl').value.trim();
             var statusBox = document.getElementById('statusBox');
             var btn = document.getElementById('dlBtn');
+            var player = document.getElementById('player');
+            var saveBtn = document.getElementById('finalSave');
             
             if(!input) { alert('Pehle link dalein!'); return; }
             
             statusBox.style.display = 'block';
             statusBox.style.color = '#e2e8f0';
-            statusBox.innerText = "⏳ Fetching video file details...";
+            statusBox.innerText = "⏳ Fetching video from unblocked stream network...";
             btn.disabled = true;
+            player.style.display = "none";
+            saveBtn.style.display = "none";
 
             try {
-                let response = await fetch("https://api.cobalt.tools/api/json", {
+                // Using updated unblocked modern main dynamic cobalt gateway endpoint
+                let response = await fetch("https://cobalt.tools/api/json", {
                     method: "POST",
                     headers: { "Content-Type": "application/json", "Accept": "application/json" },
-                    body: JSON.stringify({ url: input, filenamePattern: "basic" })
+                    body: JSON.stringify({ url: input })
                 });
                 
                 let data = await response.json();
                 
                 if(data.url) {
-                    statusBox.innerText = "⏳ Processing file stream inside browser...";
-                    
-                    let fileResp = await fetch(data.url);
-                    let fileBlob = await fileResp.blob();
-                    let blobUrl = URL.createObjectURL(fileBlob);
-                    
-                    let a = document.createElement('a');
-                    a.href = blobUrl;
-                    a.download = "RK_Downloaded_Media.mp4";
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    
                     statusBox.style.color = '#34d399';
-                    statusBox.innerText = "✅ Download Complete!";
+                    statusBox.innerText = "✅ File Generated! Niche click karke save karein:";
+                    
+                    // Injecting source directly to player and save button inside same webpage context
+                    player.src = data.url;
+                    player.style.display = "block";
+                    
+                    saveBtn.href = data.url;
+                    saveBtn.style.display = "inline-block";
                 } else {
-                    throw new Error("No URL returned");
+                    throw new Error();
                 }
             } catch (err) {
-                // Network block detection - shows secure standard download button right inside the wrapper without escaping the site
                 statusBox.style.color = '#f87171';
-                statusBox.innerHTML = "⚠️ Aapka local network direct download block kar raha hai.<br>Isi page par file open karne ke liye niche click karein aur right-click karke Save karein:<br><a href='https://api.cobalt.tools/api/json?url=" + encodeURIComponent(input) + "' class='backup-btn' target='_blank'>📥 Open &amp; Save Media</a>";
+                statusBox.innerText = "❌ Ye URL abhi secure data response nahi de raha hai. Kripya doosri video link try karein.";
             }
             btn.disabled = false;
         }

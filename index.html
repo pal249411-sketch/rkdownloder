@@ -35,13 +35,20 @@
         .tab-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff; cursor: pointer; font-weight: 600; transition: 0.2s; }
         .tab-btn:hover, .tab-btn.active { background: linear-gradient(135deg, #6366f1, #a855f7); border-color: transparent; }
         
-        .shayari-list { display: flex; flex-direction: column; gap: 15px; text-align: left; }
+        .shayari-list { display: flex; flex-direction: column; gap: 15px; text-align: left; max-height: 60vh; overflow-y: auto; padding-right: 5px; }
+        /* Scrollbar styling */
+        .shayari-list::-webkit-scrollbar { width: 6px; }
+        .shayari-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
         .shayari-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 16px; position: relative; transition: 0.3s; }
         .shayari-card:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.08); }
-        .shayari-text { font-size: 1.1rem; line-height: 1.6; margin: 0 0 15px 0; font-style: italic; color: #f1f5f9; }
+        .shayari-text { font-size: 1.1rem; line-height: 1.6; margin: 0 0 15px 0; font-style: italic; color: #f1f5f9; white-space: pre-line; }
         
         .card-footer { display: flex; justify-content: space-between; align-items: center; }
-        .category-tag { font-size: 0.8rem; padding: 4px 10px; background: rgba(99, 102, 241, 0.2); color: #818cf8; border-radius: 12px; font-weight: bold; text-transform: uppercase; }
+        .tags-wrapper { display: flex; gap: 5px; }
+        .category-tag { font-size: 0.75rem; padding: 4px 10px; background: rgba(99, 102, 241, 0.2); color: #818cf8; border-radius: 12px; font-weight: bold; text-transform: uppercase; }
+        .author-tag { font-size: 0.75rem; padding: 4px 10px; background: rgba(168, 85, 247, 0.2); color: #c084fc; border-radius: 12px; font-weight: bold; }
+        
         .copy-btn { padding: 6px 14px; border-radius: 30px; border: none; background: #22c55e; color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
         .copy-btn:hover { background: #16a34a; }
         
@@ -54,62 +61,91 @@
         <h1><span class="neon-text">R&amp;K</span></h1>
         <span class="tagline">Shayari &amp; Caption Hub</span>
         
-        <!-- Smart Search Bar -->
-        <input type="text" id="searchInput" class="search-box" placeholder="Shayari ya Category search karein (e.g. Love, Sad)..." onkeyup="filterShayari()">
+        <!-- Live Search Bar -->
+        <input type="text" id="searchInput" class="search-box" placeholder="Shayari, Author ya Category search karein..." onkeyup="searchShayari()">
         
-        <!-- Filter Tabs -->
+        <!-- Quick Filter Tabs -->
         <div class="tabs-container">
             <button class="tab-btn active" onclick="filterTab('all', this)">All</button>
+            <button class="tab-btn" onclick="filterTab('john elia', this)">John Elia 🖋️</button>
             <button class="tab-btn" onclick="filterTab('love', this)">Love ❤️</button>
             <button class="tab-btn" onclick="filterTab('sad', this)">Sad 💔</button>
             <button class="tab-btn" onclick="filterTab('attitude', this)">Attitude 😎</button>
-            <button class="tab-btn" onclick="filterTab('dosti', this)">Dosti 🤝</button>
         </div>
         
         <!-- Shayari Output Area -->
-        <div class="shayari-list" id="shayariContainer">
-            <!-- Love Shayari -->
-            <div class="shayari-card" data-cat="love">
-                <p class="shayari-text">"धड़कन मेरी तुमसे है, सांसें मेरी तुमसे हैं,<br>कैसे कहें कि हमारी हर खुशी सिर्फ तुमसे है।"</p>
-                <div class="card-footer">
-                    <span class="category-tag">Love</span>
-                    <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
-                </div>
-            </div>
-
-            <!-- Sad Shayari -->
-            <div class="shayari-card" data-cat="sad">
-                <p class="shayari-text">"वक्त ने बदल दिया हमें, वरना हम तो वो थे,<br>जो किसी की एक मुस्कान के लिए सब कुछ वार देते थे।"</p>
-                <div class="card-footer">
-                    <span class="category-tag">Sad</span>
-                    <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
-                </div>
-            </div>
-
-            <!-- Attitude Shayari -->
-            <div class="shayari-card" data-cat="attitude">
-                <p class="shayari-text">"हम अपना अंदाज अलग रखते हैं,<br>सर झुकाने का नहीं, सर उठाने का शौक रखते हैं।"</p>
-                <div class="card-footer">
-                    <span class="category-tag">Attitude</span>
-                    <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
-                </div>
-            </div>
-
-            <!-- Dosti Shayari -->
-            <div class="shayari-card" data-cat="dosti">
-                <p class="shayari-text">"सच्ची दोस्ती का कोई मोल नहीं होता,<br>हर मोड़ पर साथ देने वाला दोस्त अनमोल होता है।"</p>
-                <div class="card-footer">
-                    <span class="category-tag">Dosti</span>
-                    <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
-                </div>
-            </div>
-        </div>
+        <div class="shayari-list" id="shayariContainer"></div>
 
         <div class="no-results" id="noResultsText">❌ Koi shayari nahi mili! Kuch aur search karein.</div>
     </div>
 
     <script>
-        // Copy Button Logic
+        // MASTER SHAYARI DATABASE (Aap yahan hazaron shayari jod sakte hain)
+        const shayariDatabase = [
+            {
+                text: "क्या सितम है कि अब तेरी सूरत,\nगौर करने पर याद आती है।",
+                cat: "sad",
+                author: "John Elia"
+            },
+            {
+                text: "नया इक रिश्ता पैदा क्यों करें हम,\nबिछड़ना है तो झगड़ा क्यों करें हम।",
+                cat: "sad",
+                author: "John Elia"
+            },
+            {
+                text: "जो गुज़री न जा सकी हमसे,\nहमने वो ज़िंदगी गुज़ारी है।",
+                cat: "sad",
+                author: "John Elia"
+            },
+            {
+                text: "धड़कन मेरी तुमसे है, सांसें मेरी तुमसे हैं,\nकैसे कहें कि हमारी हर खुशी सिर्फ तुमसे है।",
+                cat: "love",
+                author: "R&K"
+            },
+            {
+                text: "हम अपना अंदाज अलग रखते हैं,\nसर झुकाने का नहीं, सर उठाने का शौक रखते हैं।",
+                cat: "attitude",
+                author: "R&K"
+            },
+            {
+                text: "तेरा ख़याल भी क्या ख़याल है,\nआए तो हर ख़याल को ख़याल से निकाल दे।",
+                cat: "love",
+                author: "John Elia"
+            }
+        ];
+
+        let currentFilter = 'all';
+
+        // Function to render Shayari Cards on screen
+        function renderShayaris(data) {
+            const container = document.getElementById('shayariContainer');
+            const noResults = document.getElementById('noResultsText');
+            container.innerHTML = '';
+            
+            if(data.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+            noResults.style.display = 'none';
+
+            data.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'shayari-card';
+                card.innerHTML = `
+                    <p class="shayari-text">"${item.text}"</p>
+                    <div class="card-footer">
+                        <div class="tags-wrapper">
+                            <span class="category-tag">${item.cat}</span>
+                            <span class="author-tag">${item.author}</span>
+                        </div>
+                        <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Copy Feature
         function copyText(btn) {
             var text = btn.parentElement.parentElement.querySelector('.shayari-text').innerText;
             navigator.clipboard.writeText(text).then(function() {
@@ -123,49 +159,49 @@
             });
         }
 
-        // Live Search Bar Logic
-        function filterShayari() {
-            var input = document.getElementById('searchInput').value.toLowerCase();
-            var cards = document.getElementsByClassName('shayari-card');
-            var noResults = document.getElementById('noResultsText');
-            var visibleCount = 0;
-
-            for (var i = 0; i < cards.length; i++) {
-                var text = cards[i].querySelector('.shayari-text').innerText.toLowerCase();
-                var cat = cards[i].getAttribute('data-cat').toLowerCase();
+        // Smart Live Search System (Search text, author, or category)
+        function searchShayari() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            
+            const filtered = shayariDatabase.filter(item => {
+                const matchesQuery = item.text.toLowerCase().includes(query) || 
+                                     item.author.toLowerCase().includes(query) || 
+                                     item.cat.toLowerCase().includes(query);
                 
-                if (text.includes(input) || cat.includes(input)) {
-                    cards[i].style.display = "block";
-                    visibleCount++;
+                if (currentFilter === 'all') {
+                    return matchesQuery;
+                } else if (currentFilter === 'john elia') {
+                    return matchesQuery && item.author.toLowerCase() === 'john elia';
                 } else {
-                    cards[i].style.display = "none";
+                    return matchesQuery && item.cat.toLowerCase() === currentFilter;
                 }
-            }
-
-            noResults.style.display = visibleCount === 0 ? "block" : "none";
+            });
+            
+            renderShayaris(filtered);
         }
 
-        // Tab Filter Logic
+        // Tab Filtering
         function filterTab(category, btn) {
-            var tabs = document.getElementsByClassName('tab-btn');
-            for(var j=0; j<tabs.length; j++) { tabs[j].classList.remove('active'); }
+            const tabs = document.getElementsByClassName('tab-btn');
+            for(let j=0; j<tabs.length; j++) { tabs[j].classList.remove('active'); }
             btn.classList.add('active');
-
-            var cards = document.getElementsByClassName('shayari-card');
-            var noResults = document.getElementById('noResultsText');
-            var visibleCount = 0;
-
-            for (var i = 0; i < cards.length; i++) {
-                var cat = cards[i].getAttribute('data-cat');
-                if (category === 'all' || cat === category) {
-                    cards[i].style.display = "block";
-                    visibleCount++;
-                } else {
-                    cards[i].style.display = "none";
-                }
+            
+            currentFilter = category;
+            document.getElementById('searchInput').value = ''; // Clear search on tab switch
+            
+            if(category === 'all') {
+                renderShayaris(shayariDatabase);
+            } else if(category === 'john elia') {
+                const filtered = shayariDatabase.filter(item => item.author.toLowerCase() === 'john elia');
+                renderShayaris(filtered);
+            } else {
+                const filtered = shayariDatabase.filter(item => item.cat.toLowerCase() === category);
+                renderShayaris(filtered);
             }
-            noResults.style.display = visibleCount === 0 ? "block" : "none";
         }
+
+        // Initial Load
+        renderShayaris(shayariDatabase);
     </script>
 
 </body>

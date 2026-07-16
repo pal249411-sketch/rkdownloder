@@ -3,194 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>R&amp;K Shayari &amp; Caption Hub</title>
+    <title>Live Gold & Silver Calculator</title>
     <style>
         body {
             margin: 0; padding: 0;
-            background: linear-gradient(135deg, #0f172a, #1e1b4b);
+            background: linear-gradient(135deg, #111827, #030712);
             color: #ffffff;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             display: flex; justify-content: center; align-items: center;
             min-height: 100vh;
-            padding: 20px 0;
+            padding: 20px;
         }
-        .main-wrapper {
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 30px 20px;
+        .calc-wrapper {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 30px 25px;
             border-radius: 24px;
-            text-align: center;
-            width: 90%; max-width: 600px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            width: 90%; max-width: 480px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
         }
-        h1 { font-size: 2.8rem; margin: 0 0 5px 0; font-weight: 800; }
-        .neon-text { background: linear-gradient(to right, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .tagline { display: block; font-size: 0.9rem; font-weight: bold; color: #94a3b8; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 25px; }
+        h2 { font-size: 2rem; margin: 0 0 5px 0; color: #d4af37; text-align: center; }
+        .tagline { display: block; font-size: 0.85rem; color: #9ca3af; text-align: center; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
         
-        .search-box { width: 90%; padding: 15px 20px; border-radius: 50px; border: 2px solid #475569; background: rgba(0,0,0,0.3); color: #fff; font-size: 1.1rem; text-align: center; outline: none; margin-bottom: 20px; transition: 0.3s; }
-        .search-box:focus { border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+        .input-group { margin-bottom: 18px; text-align: left; }
+        label { display: block; font-size: 0.95rem; margin-bottom: 8px; color: #e5e7eb; font-weight: 500; }
+        input, select {
+            width: 100%; padding: 12px 15px; border-radius: 12px;
+            border: 1px solid #4b5563; background: rgba(0,0,0,0.4);
+            color: #fff; font-size: 1rem; outline: none; box-sizing: border-box; transition: 0.3s;
+        }
+        input:focus, select:focus { border-color: #d4af37; box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
         
-        .tabs-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 25px; }
-        .tab-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff; cursor: pointer; font-weight: 600; transition: 0.2s; }
-        .tab-btn:hover, .tab-btn.active { background: linear-gradient(135deg, #6366f1, #a855f7); border-color: transparent; }
-        
-        .shayari-list { display: flex; flex-direction: column; gap: 15px; text-align: left; max-height: 50vh; overflow-y: auto; padding-right: 5px; }
-        .shayari-list::-webkit-scrollbar { width: 6px; }
-        .shayari-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        .radio-group { display: flex; gap: 15px; margin-bottom: 15px; }
+        .radio-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-weight: bold; }
+        .radio-btn input { width: auto; margin: 0; cursor: pointer; }
+        .radio-btn.active { border-color: #d4af37; background: rgba(212, 175, 55, 0.1); color: #d4af37; }
 
-        .shayari-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 16px; position: relative; transition: 0.3s; }
-        .shayari-card:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.08); }
-        .shayari-text { font-size: 1.1rem; line-height: 1.6; margin: 0 0 15px 0; font-style: italic; color: #f1f5f9; white-space: pre-line; }
-        
-        .card-footer { display: flex; justify-content: space-between; align-items: center; }
-        .tags-wrapper { display: flex; gap: 5px; }
-        .category-tag { font-size: 0.75rem; padding: 4px 10px; background: rgba(99, 102, 241, 0.2); color: #818cf8; border-radius: 12px; font-weight: bold; text-transform: uppercase; }
-        .author-tag { font-size: 0.75rem; padding: 4px 10px; background: rgba(168, 85, 247, 0.2); color: #c084fc; border-radius: 12px; font-weight: bold; }
-        
-        .copy-btn { padding: 6px 14px; border-radius: 30px; border: none; background: #22c55e; color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
-        .copy-btn:hover { background: #16a34a; }
-        .no-results { text-align: center; color: #94a3b8; font-weight: bold; margin-top: 20px; display: none; }
+        .result-box {
+            background: rgba(212, 175, 55, 0.08); border: 1px dashed #d4af37;
+            padding: 20px; border-radius: 16px; margin-top: 25px; text-align: left;
+        }
+        .res-line { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; color: #d1d5db; }
+        .res-line.total { border-top: 1px solid rgba(212,175,55,0.3); padding-top: 12px; margin-top: 5px; font-size: 1.3rem; font-weight: bold; color: #d4af37; }
     </style>
 </head>
 <body>
 
-    <div class="main-wrapper">
-        <h1><span class="neon-text">R&amp;K</span></h1>
-        <span class="tagline">Shayari &amp; Caption Hub</span>
+    <div class="calc-wrapper">
+        <h2>Gold &amp; Silver Calculator</h2>
+        <span class="tagline">Sahi Rate Janiye, Dukan Par Dhokha Se Bachiye</span>
         
-        <input type="text" id="searchInput" class="search-box" placeholder="Shayari, Author ya Category search karein..." onkeyup="searchShayari()">
-        
-        <div class="tabs-container" id="tabsBox">
-            <button class="tab-btn active" onclick="filterTab('all', this)">All</button>
-            <button class="tab-btn" onclick="filterTab('john elia', this)">John Elia 🖋️</button>
-            <button class="tab-btn" onclick="filterTab('love', this)">Love ❤️</button>
-            <button class="tab-btn" onclick="filterTab('sad', this)">Sad 💔</button>
-            <button class="tab-btn" onclick="filterTab('attitude', this)">Attitude 😎</button>
+        <div class="radio-group">
+            <div class="radio-btn active" id="goldTab" onclick="switchMetal('gold')">
+                <input type="radio" name="metal" value="gold" checked style="display:none;"> ✨ Gold
+            </div>
+            <div class="radio-btn" id="silverTab" onclick="switchMetal('silver')">
+                <input type="radio" name="metal" value="silver" style="display:none;"> 🪙 Silver
+            </div>
         </div>
-        
-        <div class="shayari-list" id="shayariContainer"></div>
-        <div class="no-results" id="noResultsText">❌ Koi shayari nahi mili!</div>
+
+        <div class="input-group" id="caratGroup">
+            <label for="carat">Carat Select Karein</label>
+            <select id="carat" onchange="calculateBill()">
+                <option value="24">24 Carat (Pure Gold)</option>
+                <option value="22" selected>22 Carat (Jewellery Gold - 916)</option>
+                <option value="18">18 Carat (Diamond Jewellery)</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="liveRate" id="rateLabel">Aaj Ka Gold Rate (Per 10 Gram)</label>
+            <input type="number" id="liveRate" placeholder="Jaise: 72000" oninput="calculateBill()">
+        </div>
+
+        <div class="input-group">
+            <label for="weight">Jewellery Ka Wazan (Grams Mein)</label>
+            <input type="number" id="weight" step="0.001" placeholder="Jaise: 8.500" oninput="calculateBill()">
+        </div>
+
+        <div class="input-group">
+            <label for="makingCharges">Making Charges (Per Gram ₹)</label>
+            <input type="number" id="makingCharges" value="350" placeholder="Jaise: 350" oninput="calculateBill()">
+        </div>
+
+        <div class="result-box">
+            <div class="res-line"><span>Raw Metal Price:</span> <span id="rawPrice">₹0.00</span></div>
+            <div class="res-line"><span>Making Charges:</span> <span id="totalMaking">₹0.00</span></div>
+            <div class="res-line"><span>GST (3%):</span> <span id="gstAmount">₹0.00</span></div>
+            <div class="res-line total"><span>Final Net Price:</span> <span id="finalTotal">₹0.00</span></div>
+        </div>
     </div>
 
     <script>
-        // MASTER COMBINED BULK ENGINE - 500+ SEGMENTS INSIDE
-        const shayariDatabase = [
-            // --- JOHN ELIA PACK ---
-            { text: "क्या सितम है कि अब तेरी सूरत,\nगौर करने पर याद आती है।", cat: "sad", author: "John Elia" },
-            { text: "नया इक रिश्ता पैदा क्यों करें हम,\nबिछड़ना है तो झगड़ा क्यों करें हम।", cat: "sad", author: "John Elia" },
-            { text: "जो गुज़री न जा सकी हमसे,\nहमने वो ज़िंदगी गुज़ारी है।", cat: "sad", author: "John Elia" },
-            { text: "तेरा ख़याल भी क्या ख़याल है,\nआए तो हर ख़याल को ख़याल से निकाल दे।", cat: "love", author: "John Elia" },
-            { text: "मुझको तो कोई गिला नहीं है,\nतुम भी तो मुझे मिले नहीं हो।", cat: "sad", author: "John Elia" },
-            { text: "दिल की तकलीफ कम नहीं होती,\nलोग मिलते हैं और बिछड़ जाते हैं।", cat: "sad", author: "John Elia" },
-            { text: "ख्वाब होते हैं बस देखने के लिए,\nइनको आंखों में सजाया नहीं करते।", cat: "sad", author: "John Elia" },
-            { text: "तुम जब आओगे तो खोया हुआ पाओगे मुझे,\nमेरी तन्हाई में ख्वाबों के सिवा कुछ भी नहीं।", cat: "love", author: "John Elia" },
-            { text: "ज़िंदगी एक कला है हुज़ूर,\nइसे अपनी शर्तों पर जीना सीखो।", cat: "attitude", author: "John Elia" },
-            { text: "काफिला दिल का रवाना तो हुआ है लेकिन,\nरास्ते में कोई दीवार न आ जाए कहीं।", cat: "sad", author: "John Elia" },
-            { text: "अजीब बात है खुद को बदल के देख लिया,\nमगर वो शख्स दिल से उतरता ही नहीं।", cat: "sad", author: "John Elia" },
-            { text: "हम तो समझे थे कि तुम भूल गए होगे हमें,\nपर तुम्हारी खामोशी तो कुछ और ही बयां करती है।", cat: "sad", author: "John Elia" },
-            { text: "खामोशी का अपना एक अलग ही मजा है,\nपेड़ कभी अपने पत्तों के गिरने का तमाशा नहीं करते।", cat: "sad", author: "John Elia" },
-            { text: "बहुत करीब से देखा है इस मतलबी दुनिया को,\nयहां लोग वक्त पड़ने पर ही खुदा को याद करते हैं।", cat: "sad", author: "John Elia" },
-            
-            // --- HUGE SAD & ALONE MATRIX ---
-            { text: "भीड़ में भी जो तन्हा महसूस कराए,\nउसे इश्क नहीं, बस एक अधूरा ख्वाब कहते हैं।", cat: "sad", author: "R&K" },
-            { text: "यादें ही तो हैं जो साथ रह जाती हैं,\nइंसान तो बस एक बहाना होता है आने का।", cat: "sad", author: "R&K" },
-            { text: "ज़िंदगी से बस यही एक गिला है,\nजो भी मिला, वक्त गुजारने के बाद मिला।", cat: "sad", author: "R&K" },
-            { text: "बर्बाद कर दिया हमें तुम्हारी इन ख्वाहिशों ने,\nवरना हम तो अपनी तन्हाई में भी शहंशाह थे।", cat: "sad", author: "R&K" },
-            { text: "अब किसी से कोई उम्मीद नहीं रही जिंदगी में,\nसबने अपने रंग वक्त आने पर दिखा ही दिए।", cat: "sad", author: "R&K" },
-            { text: "दिल का दर्द छुपाना कितना मुश्किल होता है,\nटूट कर भी महफ़िल में मुस्कुराना पड़ता है।", cat: "sad", author: "R&K" },
-            { text: "धोखा वफा की राह में खाए हैं हम ज़रूर,\nलेकिन किसी के साथ धोखा किया नहीं हमने।", cat: "sad", author: "R&K" },
-            { text: "रोए हैं बहुत तब जाकर मुस्कुराना सीखा है,\nहमने ज़िंदगी की धूप में खुद को जलाना सीखा है।", cat: "sad", author: "R&K" },
-            { text: "वो जो कभी दिल के सबसे पास हुआ करते थे,\nआज उनके पास हमारे लिए दो मिनट का वक्त भी नहीं।", cat: "sad", author: "R&K" },
-            { text: "कहने को तो बहुत लोग अपने होते हैं,\nपर दर्द जब खुद पर आता है तो सब पराए लगते हैं।", cat: "sad", author: "R&K" },
-            
-            // --- HUGE LOVE & ROMANCE MATRIX ---
-            { text: "धड़कन मेरी तुमसे है, सांसें मेरी तुमसे हैं,\nकैसे कहें कि हमारी हर खुशी सिर्फ तुमसे है।", cat: "love", author: "R&K" },
-            { text: "तेरी सादगी ही मेरा इकलौता इश्क है,\nबनने संवरने की तुम्हें कोई जरूरत नहीं।", cat: "love", author: "R&K" },
-            { text: "हमसफर ढूंढना है तो दिल से ढूंढो,\nचेहरे तो अक्सर रास्ते में बदल जाते हैं।", cat: "love", author: "R&K" },
-            { text: "इश्क करना है तो पूरी शिद्दत से करो,\nआधा अधूरा तो बस वक्त का तमाशा होता है।", cat: "love", author: "R&K" },
-            { text: "तुम्हारी मुस्कान ही मेरी दुनिया की सबसे खूबसूरत जगह है,\nइसे कभी अपनी आंखों से ओझल मत होने देना।", cat: "love", author: "R&K" },
-            { text: "मोहब्बत में झुकना कोई गुनाह नहीं,\nसूरज भी तो ढल जाता है चांद की खातिर।", cat: "love", author: "R&K" },
-            { text: "पास नहीं हो तो क्या हुआ,\nतुम्हारा एहसास हर वक्त मेरे दिल के सबसे करीब रहता है।", cat: "love", author: "R&K" },
-            { text: "न चांद की चाहत, न तारों की फरमाइश,\nहर जन्म में तुम मिलो, बस यही है दिल की आखिरी ख्वाहिश।", cat: "love", author: "R&K" },
-            { text: "तुम्हारी आँखों में खो जाने का मन करता है,\nसब कुछ भूलकर बस तुम्हारा हो जाने का मन करता है।", cat: "love", author: "R&K" },
-            { text: "सच्ची मोहब्बत कभी खत्म नहीं होती,\nवक्त के साथ इसका रंग और भी गहरा हो जाता है।", cat: "love", author: "R&K" },
-            { text: "चाहत ऐसी हो जो वफ़ा पर खत्म हो,\nवरना सूरत तो राह चलते भी मिल जाती है।", cat: "love", author: "R&K" },
-            { text: "दुआओं में बस तुम्हें ही मांगते हैं,\nतुम्हारी खुशी में ही अपनी जन्नत देखते हैं।", cat: "love", author: "R&K" },
-            { text: "इश्क का कोई रंग नहीं होता फिर भी,\nयह पूरी जिंदगी को रंगीन बना देता है।", cat: "love", author: "R&K" },
-            { text: "तेरा साथ है तो हर राह आसान लगती है,\nवरना यह पूरी दुनिया सुनसान लगती है।", cat: "love", author: "R&K" },
+        let currentMetal = 'gold';
 
-            // --- ATTITUDE & CAPTIONS ---
-            { text: "हम अपना अंदाज अलग रखते हैं,\nसर झुकाने का नहीं, सर उठाने का शौक रखते हैं।", cat: "attitude", author: "R&K" },
-            { text: "हमारी खामोशी को हमारी कमजोरी मत समझना,\nशेर जब पीछे हटता है तो शिकार बड़ा होता है।", cat: "attitude", author: "R&K" },
-            { text: "पहचान क्या होती है हम दुनिया को बताएंगे,\nवक्त आने दो, अपना परचम सबसे ऊपर लहराएंगे।", cat: "attitude", author: "R&K" }
-        ];
-
-        let activeFilter = 'all';
-
-        function renderShayaris() {
-            const container = document.getElementById('shayariContainer');
-            const noRes = document.getElementById('noResultsText');
-            const query = document.getElementById('searchInput').value.toLowerCase();
+        function switchMetal(metal) {
+            currentMetal = metal;
+            document.getElementById('goldTab').classList.remove('active');
+            document.getElementById('silverTab').classList.remove('active');
             
-            container.innerHTML = '';
-            
-            let filtered = shayariDatabase.filter(item => {
-                if (activeFilter === 'all') return true;
-                if (activeFilter === 'john elia') return item.author.toLowerCase() === 'john elia';
-                return item.cat.toLowerCase() === activeFilter;
-            });
+            if(metal === 'gold') {
+                document.getElementById('goldTab').classList.add('active');
+                document.getElementById('caratGroup').style.display = 'block';
+                document.getElementById('rateLabel').innerText = "Aaj Ka Gold Rate (Per 10 Gram)";
+                document.getElementById('liveRate').placeholder = "Jaise: 72000";
+            } else {
+                document.getElementById('silverTab').classList.add('active');
+                document.getElementById('caratGroup').style.display = 'none';
+                document.getElementById('rateLabel').innerText = "Aaj Ka Silver Rate (Per 1 KG / 1000 Gram)";
+                document.getElementById('liveRate').placeholder = "Jaise: 85000";
+            }
+            calculateBill();
+        }
 
-            if (query) {
-                filtered = filtered.filter(item => 
-                    item.text.toLowerCase().includes(query) || 
-                    item.author.toLowerCase().includes(query) || 
-                    item.cat.toLowerCase().includes(query)
-                );
+        function calculateBill() {
+            const rate = parseFloat(document.getElementById('liveRate').value) || 0;
+            const weight = parseFloat(document.getElementById('weight').value) || 0;
+            const making = parseFloat(document.getElementById('makingCharges').value) || 0;
+            const carat = parseFloat(document.getElementById('carat').value) || 24;
+
+            let basePricePerGram = 0;
+
+            if (currentMetal === 'gold') {
+                let pureGramPrice = rate / 10;
+                if(carat === 22) {
+                    basePricePerGram = pureGramPrice * (22 / 24);
+                } else if(carat === 18) {
+                    basePricePerGram = pureGramPrice * (18 / 24);
+                } else {
+                    basePricePerGram = pureGramPrice;
+                }
+            } else {
+                basePricePerGram = rate / 1000;
             }
 
-            if (filtered.length === 0) {
-                noRes.style.display = 'block';
-                return;
-            }
-            noRes.style.display = 'none';
+            let rawPrice = basePricePerGram * weight;
+            let totalMaking = making * weight;
+            let beforeGst = rawPrice + totalMaking;
+            let gstAmount = beforeGst * 0.03;
+            let finalTotal = beforeGst + gstAmount;
 
-            filtered.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'shayari-card';
-                card.innerHTML = `
-                    <p class="shayari-text">"${item.text}"</p>
-                    <div class="card-footer">
-                        <div class="tags-wrapper">
-                            <span class="category-tag">${item.cat}</span>
-                            <span class="author-tag">${item.author}</span>
-                        </div>
-                        <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
+            document.getElementById('rawPrice').innerText = "₹" + rawPrice.toFixed(2);
+            document.getElementById('totalMaking').innerText = "₹" + totalMaking.toFixed(2);
+            document.getElementById('gstAmount').innerText = "₹" + gstAmount.toFixed(2);
+            document.getElementById('finalTotal').innerText = "₹" + finalTotal.toFixed(2);
         }
-
-        function copyText(btn) {
-            var text = btn.parentElement.parentElement.querySelector('.shayari-text').innerText;
-            navigator.clipboard.writeText(text).then(function() {
-                var orig = btn.innerText; btn.innerText = "✅ Copied!"; btn.style.background = "#a855f7";
-                setTimeout(function() { btn.innerText = orig; btn.style.background = "#22c55e"; }, 1500);
-            });
-        }
-
-        function searchShayari() { renderShayaris(); }
-
-        function filterTab(category, btn) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            activeFilter = category;
-            document.getElementById('searchInput').value = ''; 
-            renderShayaris();
-        }
-
-        renderShayaris();
     </script>
 </body>
 </html>

@@ -74,7 +74,7 @@
     </div>
 
     <script>
-        // INTERNAL MASTER DATABASE (Ab koi extra file ka chakkar hi nahi hai!)
+        // FIXED DATA - Saari shayari ab isi file ke andar fixed hain
         const shayariDatabase = [
             { text: "क्या सितम है कि अब तेरी सूरत,\nगौर करने पर याद आती है।", cat: "sad", author: "John Elia" },
             { text: "नया इक रिश्ता पैदा क्यों करें हम,\nबिछड़ना है तो झगड़ा क्यों करें हम।", cat: "sad", author: "John Elia" },
@@ -157,7 +157,6 @@
             renderShayaris();
         }
 
-        // Initial render
         renderShayaris();
     </script>
 </body>

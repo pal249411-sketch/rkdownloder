@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>R&amp;K Downloader - Premium Hub</title>
+    <title>R&amp;K Shayari &amp; Caption Hub</title>
     <style>
         body {
             margin: 0; padding: 0;
@@ -12,67 +12,159 @@
             font-family: 'Segoe UI', sans-serif;
             display: flex; justify-content: center; align-items: center;
             min-height: 100vh;
+            padding: 20px 0;
         }
         .main-wrapper {
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px 25px;
+            padding: 30px 20px;
             border-radius: 24px;
             text-align: center;
-            width: 90%; max-width: 500px;
+            width: 90%; max-width: 600px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
-        h1 { font-size: 3.5rem; margin: 0 0 5px 0; font-weight: 800; }
+        h1 { font-size: 2.8rem; margin: 0 0 5px 0; font-weight: 800; }
         .neon-text { background: linear-gradient(to right, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .tagline { display: block; font-size: 0.9rem; font-weight: bold; color: #94a3b8; letter-spacing: 4px; text-transform: uppercase; margin-top: -5px; margin-bottom: 25px; }
-        .input-box { width: 88%; padding: 15px 20px; border-radius: 50px; border: 2px solid #475569; background: rgba(0,0,0,0.3); color: #fff; font-size: 1rem; text-align: center; outline: none; margin-bottom: 20px; }
-        .action-btn { width: 96%; padding: 16px 20px; border-radius: 50px; border: none; font-size: 1.1rem; font-weight: bold; cursor: pointer; color: white; background: linear-gradient(135deg, #6366f1, #a855f7); transition: 0.2s; }
-        .action-btn:hover { transform: translateY(-2px); }
-        .status { margin-top: 20px; font-weight: bold; color: #34d399; display: none; line-height: 1.5; }
-        .dl-link-btn { display: inline-block; width: 90%; padding: 14px 0; background: #22c55e; color: white; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem; text-align: center; margin-top: 15px; }
+        .tagline { display: block; font-size: 0.9rem; font-weight: bold; color: #94a3b8; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 25px; }
+        
+        .search-box { width: 90%; padding: 15px 20px; border-radius: 50px; border: 2px solid #475569; background: rgba(0,0,0,0.3); color: #fff; font-size: 1.1rem; text-align: center; outline: none; margin-bottom: 20px; transition: 0.3s; }
+        .search-box:focus { border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+        
+        .tabs-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        .tab-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .tab-btn:hover, .tab-btn.active { background: linear-gradient(135deg, #6366f1, #a855f7); border-color: transparent; }
+        
+        .shayari-list { display: flex; flex-direction: column; gap: 15px; text-align: left; }
+        .shayari-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 16px; position: relative; transition: 0.3s; }
+        .shayari-card:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.08); }
+        .shayari-text { font-size: 1.1rem; line-height: 1.6; margin: 0 0 15px 0; font-style: italic; color: #f1f5f9; }
+        
+        .card-footer { display: flex; justify-content: space-between; align-items: center; }
+        .category-tag { font-size: 0.8rem; padding: 4px 10px; background: rgba(99, 102, 241, 0.2); color: #818cf8; border-radius: 12px; font-weight: bold; text-transform: uppercase; }
+        .copy-btn { padding: 6px 14px; border-radius: 30px; border: none; background: #22c55e; color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
+        .copy-btn:hover { background: #16a34a; }
+        
+        .no-results { text-align: center; color: #94a3b8; font-weight: bold; margin-top: 20px; display: none; }
     </style>
 </head>
 <body>
 
     <div class="main-wrapper">
         <h1><span class="neon-text">R&amp;K</span></h1>
-        <span class="tagline">Downloader</span>
-        <p style="color: #cbd5e1; font-size: 0.95rem; margin-bottom: 25px;">Premium Cloud Stream Engine.</p>
+        <span class="tagline">Shayari &amp; Caption Hub</span>
         
-        <input type="text" id="videoUrl" class="input-box" placeholder="Yahan link paste karein...">
-        <br>
-        <button class="action-btn" id="dlBtn" onclick="processPremiumBypass()">⚡ Fetch Media</button>
+        <!-- Smart Search Bar -->
+        <input type="text" id="searchInput" class="search-box" placeholder="Shayari ya Category search karein (e.g. Love, Sad)..." onkeyup="filterShayari()">
         
-        <div class="status" id="statusBox">⏳ Processing...</div>
+        <!-- Filter Tabs -->
+        <div class="tabs-container">
+            <button class="tab-btn active" onclick="filterTab('all', this)">All</button>
+            <button class="tab-btn" onclick="filterTab('love', this)">Love ❤️</button>
+            <button class="tab-btn" onclick="filterTab('sad', this)">Sad 💔</button>
+            <button class="tab-btn" onclick="filterTab('attitude', this)">Attitude 😎</button>
+            <button class="tab-btn" onclick="filterTab('dosti', this)">Dosti 🤝</button>
+        </div>
+        
+        <!-- Shayari Output Area -->
+        <div class="shayari-list" id="shayariContainer">
+            <!-- Love Shayari -->
+            <div class="shayari-card" data-cat="love">
+                <p class="shayari-text">"धड़कन मेरी तुमसे है, सांसें मेरी तुमसे हैं,<br>कैसे कहें कि हमारी हर खुशी सिर्फ तुमसे है।"</p>
+                <div class="card-footer">
+                    <span class="category-tag">Love</span>
+                    <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
+                </div>
+            </div>
+
+            <!-- Sad Shayari -->
+            <div class="shayari-card" data-cat="sad">
+                <p class="shayari-text">"वक्त ने बदल दिया हमें, वरना हम तो वो थे,<br>जो किसी की एक मुस्कान के लिए सब कुछ वार देते थे।"</p>
+                <div class="card-footer">
+                    <span class="category-tag">Sad</span>
+                    <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
+                </div>
+            </div>
+
+            <!-- Attitude Shayari -->
+            <div class="shayari-card" data-cat="attitude">
+                <p class="shayari-text">"हम अपना अंदाज अलग रखते हैं,<br>सर झुकाने का नहीं, सर उठाने का शौक रखते हैं।"</p>
+                <div class="card-footer">
+                    <span class="category-tag">Attitude</span>
+                    <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
+                </div>
+            </div>
+
+            <!-- Dosti Shayari -->
+            <div class="shayari-card" data-cat="dosti">
+                <p class="shayari-text">"सच्ची दोस्ती का कोई मोल नहीं होता,<br>हर मोड़ पर साथ देने वाला दोस्त अनमोल होता है।"</p>
+                <div class="card-footer">
+                    <span class="category-tag">Dosti</span>
+                    <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="no-results" id="noResultsText">❌ Koi shayari nahi mili! Kuch aur search karein.</div>
     </div>
 
     <script>
-        function processPremiumBypass() {
-            var input = document.getElementById('videoUrl').value.trim();
-            var statusBox = document.getElementById('statusBox');
-            
-            if(!input) { alert('Pehle link dalein!'); return; }
-            
-            statusBox.style.display = 'block';
-            statusBox.style.color = '#34d399';
-            statusBox.innerText = "⏳ Direct stream sync active...";
-            
-            // Premium high-speed global extraction engine (unblocked and open context)
-            var cleanPath = input.split('?')[0];
-            var targetEngine = "https://www.instagram.com.cf/" + cleanPath.replace("https://www.instagram.com/", "");
-            
-            // Dynamic open backup engine routing
-            if(input.includes("instagram.com")) {
-                var reelID = input.split("/reel/")[1]?.split("/")[0] || input.split("/p/")[1]?.split("/")[0];
-                if(reelID) {
-                    targetEngine = "https://ddinstagram.com/images/reels/" + reelID + ".mp4";
+        // Copy Button Logic
+        function copyText(btn) {
+            var text = btn.parentElement.parentElement.querySelector('.shayari-text').innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                var originalText = btn.innerText;
+                btn.innerText = "✅ Copied!";
+                btn.style.background = "#a855f7";
+                setTimeout(function() {
+                    btn.innerText = originalText;
+                    btn.style.background = "#22c55e";
+                }, 1500);
+            });
+        }
+
+        // Live Search Bar Logic
+        function filterShayari() {
+            var input = document.getElementById('searchInput').value.toLowerCase();
+            var cards = document.getElementsByClassName('shayari-card');
+            var noResults = document.getElementById('noResultsText');
+            var visibleCount = 0;
+
+            for (var i = 0; i < cards.length; i++) {
+                var text = cards[i].querySelector('.shayari-text').innerText.toLowerCase();
+                var cat = cards[i].getAttribute('data-cat').toLowerCase();
+                
+                if (text.includes(input) || cat.includes(input)) {
+                    cards[i].style.display = "block";
+                    visibleCount++;
                 } else {
-                    targetEngine = "https://takedownvideo.com/api/direct?url=" + encodeURIComponent(input);
+                    cards[i].style.display = "none";
                 }
             }
-            
-            statusBox.innerHTML = "✅ Extraction complete! Niche link par click karke direct source file download karein:<br><a href='" + targetEngine + "' class='dl-link-btn' target='_blank'>📥 Save Video File</a>";
+
+            noResults.style.display = visibleCount === 0 ? "block" : "none";
+        }
+
+        // Tab Filter Logic
+        function filterTab(category, btn) {
+            var tabs = document.getElementsByClassName('tab-btn');
+            for(var j=0; j<tabs.length; j++) { tabs[j].classList.remove('active'); }
+            btn.classList.add('active');
+
+            var cards = document.getElementsByClassName('shayari-card');
+            var noResults = document.getElementById('noResultsText');
+            var visibleCount = 0;
+
+            for (var i = 0; i < cards.length; i++) {
+                var cat = cards[i].getAttribute('data-cat');
+                if (category === 'all' || cat === category) {
+                    cards[i].style.display = "block";
+                    visibleCount++;
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+            noResults.style.display = visibleCount === 0 ? "block" : "none";
         }
     </script>
 

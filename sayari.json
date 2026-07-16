@@ -1,177 +1,41 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>R&amp;K Shayari &amp; Caption Hub</title>
-    <style>
-        body {
-            margin: 0; padding: 0;
-            background: linear-gradient(135deg, #0f172a, #1e1b4b);
-            color: #ffffff;
-            font-family: 'Segoe UI', sans-serif;
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh;
-            padding: 20px 0;
-        }
-        .main-wrapper {
-            background: rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 30px 20px;
-            border-radius: 24px;
-            text-align: center;
-            width: 90%; max-width: 600px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
-        h1 { font-size: 2.8rem; margin: 0 0 5px 0; font-weight: 800; }
-        .neon-text { background: linear-gradient(to right, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .tagline { display: block; font-size: 0.9rem; font-weight: bold; color: #94a3b8; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 25px; }
-        
-        .search-box { width: 90%; padding: 15px 20px; border-radius: 50px; border: 2px solid #475569; background: rgba(0,0,0,0.3); color: #fff; font-size: 1.1rem; text-align: center; outline: none; margin-bottom: 20px; transition: 0.3s; }
-        .search-box:focus { border-color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
-        
-        .tabs-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 25px; }
-        .tab-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #fff; cursor: pointer; font-weight: 600; transition: 0.2s; }
-        .tab-btn:hover, .tab-btn.active { background: linear-gradient(135deg, #6366f1, #a855f7); border-color: transparent; }
-        
-        .shayari-list { display: flex; flex-direction: column; gap: 15px; text-align: left; max-height: 50vh; overflow-y: auto; padding-right: 5px; }
-        .shayari-list::-webkit-scrollbar { width: 6px; }
-        .shayari-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
-
-        .shayari-card { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); padding: 20px; border-radius: 16px; position: relative; transition: 0.3s; }
-        .shayari-card:hover { transform: translateY(-2px); background: rgba(255, 255, 255, 0.08); }
-        .shayari-text { font-size: 1.1rem; line-height: 1.6; margin: 0 0 15px 0; font-style: italic; color: #f1f5f9; white-space: pre-line; }
-        
-        .card-footer { display: flex; justify-content: space-between; align-items: center; }
-        .tags-wrapper { display: flex; gap: 5px; }
-        .category-tag { font-size: 0.75rem; padding: 4px 10px; background: rgba(99, 102, 241, 0.2); color: #818cf8; border-radius: 12px; font-weight: bold; text-transform: uppercase; }
-        .author-tag { font-size: 0.75rem; padding: 4px 10px; background: rgba(168, 85, 247, 0.2); color: #c084fc; border-radius: 12px; font-weight: bold; }
-        
-        .copy-btn { padding: 6px 14px; border-radius: 30px; border: none; background: #22c55e; color: white; font-weight: bold; cursor: pointer; font-size: 0.85rem; transition: 0.2s; }
-        .copy-btn:hover { background: #16a34a; }
-        .no-results { text-align: center; color: #94a3b8; font-weight: bold; margin-top: 20px; display: none; }
-    </style>
-</head>
-<body>
-
-    <div class="main-wrapper">
-        <h1><span class="neon-text">R&amp;K</span></h1>
-        <span class="tagline">Shayari &amp; Caption Hub</span>
-        
-        <input type="text" id="searchInput" class="search-box" placeholder="Shayari, Author ya Category search karein..." onkeyup="searchShayari()">
-        
-        <div class="tabs-container" id="tabsBox">
-            <button class="tab-btn active" onclick="filterTab('all', this)">All</button>
-            <button class="tab-btn" onclick="filterTab('john elia', this)">John Elia 🖋️</button>
-            <button class="tab-btn" onclick="filterTab('love', this)">Love ❤️</button>
-            <button class="tab-btn" onclick="filterTab('sad', this)">Sad 💔</button>
-            <button class="tab-btn" onclick="filterTab('attitude', this)">Attitude 😎</button>
-        </div>
-        
-        <div class="shayari-list" id="shayariContainer"></div>
-        <div class="no-results" id="noResultsText">❌ Koi shayari nahi mili!</div>
-    </div>
-
-    <script>
-        const shayariDatabase = [
-            { text: "क्या सितम है कि अब तेरी सूरत,\nगौर करने पर याद आती है।", cat: "sad", author: "John Elia" },
-            { text: "नया इक रिश्ता पैदा क्यों करें हम,\nबिछड़ना है तो झगड़ा क्यों करें हम।", cat: "sad", author: "John Elia" },
-            { text: "जो गुज़री न जा सकी हमसे,\nहमने वो ज़िंदगी गुज़ारी है।", cat: "sad", author: "John Elia" },
-            { text: "तेरा ख़याल भी क्या ख़याल है,\nआए तो हर ख़याल को ख़याल से निकाल दे।", cat: "love", author: "John Elia" },
-            { text: "मुझको तो कोई गिला नहीं है,\nतुम भी तो मुझे मिले नहीं हो।", cat: "sad", author: "John Elia" },
-            { text: "दिल की तकलीफ कम नहीं होती,\nलोग मिलते हैं और बिछड़ जाते हैं।", cat: "sad", author: "John Elia" },
-            { text: "ख्वाब होते हैं बस देखने के लिए,\nइनको आंखों में सजाया नहीं करते।", cat: "sad", author: "John Elia" },
-            { text: "तुम जब आओगे तो खोया हुआ पाओगे मुझे,\nमेरी तन्हाई में ख्वाबों के सिवा कुछ भी नहीं।", cat: "love", author: "John Elia" },
-            { text: "ज़िंदगी एक कला है हुज़ूर,\nइसे अपनी शर्तों पर जीना सीखो।", cat: "attitude", author: "John Elia" },
-            { text: "काफिला दिल का रवाना तो हुआ है लेकिन,\nरास्ते में कोई दीवार न आ जाए कहीं।", cat: "sad", author: "John Elia" },
-            { text: "अजीब बात है खुद को बदल के देख लिया,\nमगर वो शख्स दिल से उतरता ही नहीं।", cat: "sad", author: "John Elia" },
-            { text: "हम तो समझे थे कि तुम भूल गए होगे हमें,\nपर तुम्हारी खामोशी तो कुछ और ही बयां करती है।", cat: "sad", author: "John Elia" },
-            { text: "खामोशी का अपना एक अलग ही मजा है,\nपेड़ कभी अपने पत्तों के गिरने का तमाशा नहीं करते।", cat: "sad", author: "John Elia" },
-            { text: "बहुत करीब से देखा है इस मतलबी दुनिया को,\nयहां लोग वक्त पड़ने पर ही खुदा को याद करते हैं।", cat: "sad", author: "John Elia" },
-            { text: "धड़कन मेरी तुमसे है, सांसें मेरी तुमसे हैं,\nकैसे कहें कि हमारी हर खुशी सिर्फ तुमसे है।", cat: "love", author: "R&K" },
-            { text: "तेरी सादगी ही मेरा इकलौता इश्क है,\nबनने संवरने की तुम्हें कोई जरूरत नहीं।", cat: "love", author: "R&K" },
-            { text: "हमसफर ढूंढना है तो दिल से ढूंढो,\nचेहरे तो अक्सर रास्ते में बदल जाते हैं।", cat: "love", author: "R&K" },
-            { text: "इश्क करना है तो पूरी शिद्दत से करो,\nआधा अधूरा तो बस वक्त का तमाशा होता है।", cat: "love", author: "R&K" },
-            { text: "तुम्हारी मुस्कान ही मेरी दुनिया की सबसे खूबसूरत जगह है,\nइसे कभी अपनी आंखों से ओझल मत होने देना।", cat: "love", author: "R&K" },
-            { text: "मोहब्बत में झुकना कोई गुनाह नहीं,\nसूरज भी तो ढल जाता है चांद की खातिर।", cat: "love", author: "R&K" },
-            { text: "पास नहीं हो तो क्या हुआ,\nतुम्हारा एहसास हर वक्त मेरे दिल के सबसे करीब रहता है।", cat: "love", author: "R&K" },
-            { text: "न चांद की चाहत, न तारों की फरमाइश,\nहर जन्म में तुम मिलो, बस यही है दिल की आखिरी ख्वाहिश।", cat: "love", author: "R&K" },
-            { text: "हम अपना अंदाज अलग रखते हैं,\nसर झुकाने का नहीं, सर उठाने का शौक रखते हैं।", cat: "attitude", author: "R&K" },
-            { text: "दुनिया बदल गई तो हम भी बदल गए,\nअब हम किसी की याद में रोया नहीं करते।", cat: "attitude", author: "R&K" },
-            { text: "हम वो हैं जो अपनी शर्तों पर जीते हैं,\nकिसी की बंदिशें हमें रास नहीं आतीं।", cat: "attitude", author: "R&K" },
-            { text: "हमारी खामोशी को हमारी कमजोरी मत समझना,\nशेर जब पीछे हटता है तो शिकार बड़ा होता है।", cat: "attitude", author: "R&K" },
-            { text: "अंदाज तो हमारा भी कातिलाना है हुज़ूर,\nबस हम बिना बात के तमाशा नहीं करते।", cat: "attitude", author: "R&K" },
-            { text: "भीड़ में खड़ा होना मेरा मकसद नहीं,\nबल्कि भीड़ जिसके लिए खड़ी हो वो बनना है।", cat: "attitude", author: "R&K" },
-            { text: "रास्ते मुश्किल हैं पर हम मंजिल पा ही लेंगे,\nजो हमसे जलते हैं उन्हें एक दिन और जलाएंगे।", cat: "attitude", author: "R&K" },
-            { text: "पहचान क्या होती है हम दुनिया को बताएंगे,\nवक्त आने दो, अपना परचम सबसे ऊपर लहराएंगे।", cat: "attitude", author: "R&K" }
-        ];
-
-        let activeFilter = 'all';
-
-        function renderShayaris() {
-            const container = document.getElementById('shayariContainer');
-            const noRes = document.getElementById('noResultsText');
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            
-            container.innerHTML = '';
-            
-            let filtered = shayariDatabase.filter(item => {
-                if (activeFilter === 'all') return true;
-                if (activeFilter === 'john elia') return item.author.toLowerCase() === 'john elia';
-                return item.cat.toLowerCase() === activeFilter;
-            });
-
-            if (query) {
-                filtered = filtered.filter(item => 
-                    item.text.toLowerCase().includes(query) || 
-                    item.author.toLowerCase().includes(query) || 
-                    item.cat.toLowerCase().includes(query)
-                );
-            }
-
-            if (filtered.length === 0) {
-                noRes.style.display = 'block';
-                return;
-            }
-            noRes.style.display = 'none';
-
-            filtered.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'shayari-card';
-                card.innerHTML = `
-                    <p class="shayari-text">"${item.text}"</p>
-                    <div class="card-footer">
-                        <div class="tags-wrapper">
-                            <span class="category-tag">${item.cat}</span>
-                            <span class="author-tag">${item.author}</span>
-                        </div>
-                        <button class="copy-btn" onclick="copyText(this)">📋 Copy</button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function copyText(btn) {
-            var text = btn.parentElement.parentElement.querySelector('.shayari-text').innerText;
-            navigator.clipboard.writeText(text).then(function() {
-                var orig = btn.innerText; btn.innerText = "✅ Copied!"; btn.style.background = "#a855f7";
-                setTimeout(function() { btn.innerText = orig; btn.style.background = "#22c55e"; }, 1500);
-            });
-        }
-
-        function searchShayari() { renderShayaris(); }
-
-        function filterTab(category, btn) {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            activeFilter = category;
-            document.getElementById('searchInput').value = ''; 
-            renderShayaris();
-        }
-
-        renderShayaris();
-    </script>
-</body>
-</html>
+[
+  { "text": "क्या सितम है कि अब तेरी सूरत,\nगौर करने पर याद आती है।", "cat": "sad", "author": "John Elia" },
+  { "text": "नया इक रिश्ता पैदा क्यों करें हम,\nबिछड़ना है तो झगड़ा क्यों करें हम।", "cat": "sad", "author": "John Elia" },
+  { "text": "जो गुज़री न जा सकी हमसे,\nहमने वो ज़िंदगी गुज़ारी है।", "cat": "sad", "author": "John Elia" },
+  { "text": "मुझको तो कोई गिला नहीं है,\nतुम भी तो मुझे मिले नहीं हो।", "cat": "sad", "author": "John Elia" },
+  { "text": "दिल की तकलीफ कम नहीं होती,\nलोग मिलते हैं और बिछड़ जाते हैं।", "cat": "sad", "author": "John Elia" },
+  { "text": "ख्वाब होते हैं बस देखने के लिए,\nइनको आंखों में सजाया नहीं करते।", "cat": "sad", "author": "John Elia" },
+  { "text": "अब तो खुशियों का भी डर लगता है,\nजाने कब ये भी हमसे रूठ जाएं।", "cat": "sad", "author": "John Elia" },
+  { "text": "भीड़ में भी जो तन्हा महसूस कराए,\nउसे इश्क नहीं, बस एक अधूरा ख्वाब कहते हैं।", "cat": "sad", "author": "John Elia" },
+  { "text": "यादें ही तो हैं जो साथ रह जाती हैं,\nइंसान तो बस एक बहाना होता है आने का।", "cat": "sad", "author": "John Elia" },
+  { "text": "काफिला दिल का रवाना तो हुआ है लेकिन,\nरास्ते में कोई दीवार न आ जाए कहीं।", "cat": "sad", "author": "John Elia" },
+  { "text": "अजीब बात है खुद को बदल के देख लिया,\nमगर वो शख्स दिल से उतरता ही नहीं।", "cat": "sad", "author": "John Elia" },
+  { "text": "हम तो समझे थे कि तुम भूल गए होगे हमें,\nपर तुम्हारी खामोशी तो कुछ और ही बयां करती है।", "cat": "sad", "author": "John Elia" },
+  { "text": "खामोशी का अपना एक अलग ही मजा है,\nपेड़ कभी अपने पत्तों के गिरने का तमाशा नहीं करते।", "cat": "sad", "author": "John Elia" },
+  { "text": "बहुत करीब से देखा है इस मतलबी दुनिया को,\nयहां लोग वक्त पड़ने पर ही खुदा को याद करते हैं।", "cat": "sad", "author": "John Elia" },
+  { "text": "ज़िंदगी से बस यही एक गिला है,\nजो भी मिला, वक्त गुजारने के बाद मिला।", "cat": "sad", "author": "John Elia" },
+  { "text": "बर्बाद कर दिया हमें तुम्हारी इन ख्वाहिशों ने,\nवरना हम तो अपनी तन्हाई में भी शहंशाह थे।", "cat": "sad", "author": "John Elia" },
+  { "text": "ख्वाब टूटे हैं मगर हौसले अभी जिंदा हैं,\nहम वो हैं जिनसे मुश्किलें भी शर्मिंदा हैं।", "cat": "sad", "author": "John Elia" },
+  { "text": "अब किसी से कोई उम्मीद नहीं रही जिंदगी में,\nसबने अपने रंग वक्त आने पर दिखा ही दिए।", "cat": "sad", "author": "John Elia" },
+  { "text": "दिल का दर्द छुपाना कितना मुश्किल होता है,\nटूट कर भी महफ़िल में मुस्कुराना पड़ता है।", "cat": "sad", "author": "John Elia" },
+  { "text": "धोखा वफा की राह में खाए हैं हम ज़रूर,\nलेकिन किसी के साथ धोखा किया नहीं हमने।", "cat": "sad", "author": "John Elia" },
+  { "text": "तेरा ख़याल भी क्या ख़याल है,\nआए तो हर ख़याल को ख़याल से निकाल दे।", "cat": "love", "author": "John Elia" },
+  { "text": "तुम जब आओगे तो खोया हुआ पाओगे मुझे,\nमेरी तन्हाई में ख्वाबों के सिवा कुछ भी नहीं।", "cat": "love", "author": "John Elia" },
+  { "text": "बातें तो हर कोई समझ लेता है,\nमजा तब है जब कोई खामोशी समझ पाए।", "cat": "love", "author": "John Elia" },
+  { "text": "धड़कन मेरी तुमसे है, सांसें मेरी तुमसे हैं,\nकैसे कहें कि हमारी हर खुशी सिर्फ तुमसे है।", "cat": "love", "author": "R&K" },
+  { "text": "तेरी सादगी ही मेरा इकलौता इश्क है,\nबनने संवरने की तुम्हें कोई जरूरत नहीं।", "cat": "love", "author": "R&K" },
+  { "text": "हमसफर ढूंढना है तो दिल से ढूंढो,\nचेहरे तो अक्सर रास्ते में बदल जाते हैं।", "cat": "love", "author": "R&K" },
+  { "text": "इश्क करना है तो पूरी शिद्दत से करो,\nआधा अधूरा तो बस वक्त का तमाशा होता है।", "cat": "love", "author": "R&K" },
+  { "text": "तुम्हारी मुस्कान ही मेरी दुनिया की सबसे खूबसूरत जगह है,\nइसे कभी अपनी आंखों से ओझल मत होने देना।", "cat": "love", "author": "R&K" },
+  { "text": "मोहब्बत में झुकना कोई गुनाह नहीं,\nसूरज भी तो ढल जाता है चांद की खातिर।", "cat": "love", "author": "R&K" },
+  { "text": "पास नहीं हो तो क्या हुआ,\nतुम्हारा एहसास हर वक्त मेरे दिल के सबसे करीब रहता है।", "cat": "love", "author": "R&K" },
+  { "text": "न चांद की चाहत, न तारों की फरमाइश,\nहर जन्म में तुम मिलो, बस यही है दिल की आखिरी ख्वाहिश।", "cat": "love", "author": "R&K" },
+  { "text": "तुम्हारी आँखों में खो जाने का मन करता है,\nसब कुछ भूलकर बस तुम्हारा हो जाने का मन करता है।", "cat": "love", "author": "R&K" },
+  { "text": "सच्ची मोहब्बत कभी खत्म नहीं होती,\nवक्त के साथ इसका रंग और भी गहरा हो जाता है।", "cat": "love", "author": "R&K" },
+  { "text": "चाहत ऐसी हो जो वफ़ा पर खत्म हो,\nवरना सूरत तो राह चलते भी मिल जाती है।", "cat": "love", "author": "R&K" },
+  { "text": "दुआओं में बस तुम्हें ही मांगते हैं,\nतुम्हारी खुशी में ही अपनी जन्नत देखते हैं।", "cat": "love", "author": "R&K" },
+  { "text": "इश्क का कोई रंग नहीं होता फिर भी,\nयह पूरी जिंदगी को रंगीन बना देता है।", "cat": "love", "author": "R&K" },
+  { "text": "सांसों की डोर तुमसे बंधी है हुज़ूर,\nतुम दूर हो तो जिंदगी थमी सी लगती है।", "cat": "love", "author": "R&K" },
+  { "text": "चेहरे पर एक छोटी सी मुस्कान ला देते हो,\nतुम खामोश रहकर भी दिल का हाल समझ लेते हो।", "cat": "love", "author": "R&K" },
+  { "text": "तेरा साथ है तो हर राह आसान लगती है,\nवरना यह पूरी दुनिया सुनसान लगती है।", "cat": "love", "author": "R&K" }
+]
